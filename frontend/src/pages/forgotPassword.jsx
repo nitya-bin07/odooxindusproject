@@ -51,9 +51,8 @@ export default function ForgotPassword() {
       });
 
       toast.success(res.data.message || "Password reset successful");
-      setTimeout(() => {
-  navigate("/auth/login");
-}, 1500);
+      
+  navigate("/login");
 
     } catch (err) {
 

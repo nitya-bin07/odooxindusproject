@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 function Input({ label, type = "text", placeholder, value, onChange }) {
   return (
@@ -17,17 +18,21 @@ function Input({ label, type = "text", placeholder, value, onChange }) {
   );
 }
 
-export default function AuthForms() {
-  const [mode, setMode] = useState("login");
+export default function AuthForms({ initialMode = "login" }) {
+  const [mode, setMode] = useState(initialMode);
   const [fields, setFields] = useState({});
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
   const set = (key, val) => setFields((f) => ({ ...f, [key]: val }));
 
   const handleSubmit = () => {
     setSuccess(mode === "login" ? "Signed in successfully!" : "Account created successfully!");
     setFields({});
-    setTimeout(() => setSuccess(""), 3000);
+    setTimeout(() => {
+      setSuccess("");
+      navigate("/dashboard");
+    }, 1500);
   };
 
   const switchMode = (m) => {
@@ -41,11 +46,11 @@ export default function AuthForms() {
       <div className="w-full max-w-sm">
 
         {/* Logo */}
-        <div className="flex justify-center mb-6">
+        <Link to="/" className="flex justify-center mb-6">
           <div className="w-12 h-12 rounded-2xl bg-gray-900 border border-gray-800 flex items-center justify-center text-red-500 font-bold text-xl">
             A
           </div>
-        </div>
+        </Link>
 
         {/* Heading */}
         <h1 className="text-center text-2xl font-semibold text-gray-100 mb-1">

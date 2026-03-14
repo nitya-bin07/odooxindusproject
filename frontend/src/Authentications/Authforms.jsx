@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../AuthContext";
+import { toast } from "react-toastify";
 
 function Input({ label, type = "text", placeholder, value, onChange }) {
   return (
@@ -21,24 +23,38 @@ function Input({ label, type = "text", placeholder, value, onChange }) {
 export default function AuthForms({ initialMode = "login" }) {
   const [mode, setMode] = useState(initialMode);
   const [fields, setFields] = useState({});
-  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+  const { login, signup, loading } = useAuth();
 
   const set = (key, val) => setFields((f) => ({ ...f, [key]: val }));
 
-  const handleSubmit = () => {
-    setSuccess(mode === "login" ? "Signed in successfully!" : "Account created successfully!");
-    setFields({});
-    setTimeout(() => {
-      setSuccess("");
-      navigate("/dashboard");
-    }, 1500);
+  const handleSubmit = async () => {
+    if (mode === "login") {
+      const result = await login(fields.email || "", fields.password || "");
+      if (result.success) {
+        toast.success("Signed in successfully!");
+        setTimeout(() => navigate("/dashboard"), 800);
+      } else {
+        toast.error(result.message);
+      }
+    } else {
+      if (fields.password !== fields.confirmPassword) {
+        toast.error("Passwords do not match");
+        return;
+      }
+      const result = await signup(fields.name || "", fields.email || "", fields.password || "");
+      if (result.success) {
+        toast.success("Account created successfully!");
+        setTimeout(() => navigate("/dashboard"), 800);
+      } else {
+        toast.error(result.message);
+      }
+    }
   };
 
   const switchMode = (m) => {
     setMode(m);
     setFields({});
-    setSuccess("");
   };
 
   return (
@@ -81,22 +97,22 @@ export default function AuthForms({ initialMode = "login" }) {
           </div>
 
           {/* Fields */}
-          <Input
-            label="Login ID"
-            placeholder="Enter your login ID"
-            value={fields.loginId || ""}
-            onChange={(e) => set("loginId", e.target.value)}
-          />
-
           {mode === "signup" && (
             <Input
-              label="Email Address"
-              type="email"
-              placeholder="you@example.com"
-              value={fields.email || ""}
-              onChange={(e) => set("email", e.target.value)}
+              label="Full Name"
+              placeholder="Enter your name"
+              value={fields.name || ""}
+              onChange={(e) => set("name", e.target.value)}
             />
           )}
+
+          <Input
+            label="Email"
+            type="email"
+            placeholder="you@example.com"
+            value={fields.email || ""}
+            onChange={(e) => set("email", e.target.value)}
+          />
 
           <Input
             label="Password"
@@ -108,9 +124,9 @@ export default function AuthForms({ initialMode = "login" }) {
 
           {mode === "signup" && (
             <Input
-              label="Re-enter Password"
+              label="Confirm Password"
               type="password"
-              placeholder="Confirm your password"
+              placeholder="Re-enter your password"
               value={fields.confirmPassword || ""}
               onChange={(e) => set("confirmPassword", e.target.value)}
             />
@@ -119,17 +135,11 @@ export default function AuthForms({ initialMode = "login" }) {
           {/* Submit */}
           <button
             onClick={handleSubmit}
-            className="w-full mt-2 py-3 bg-red-600 hover:bg-red-500 active:scale-95 text-white text-sm font-semibold rounded-xl transition-all"
+            disabled={loading}
+            className="w-full mt-2 py-3 bg-red-600 hover:bg-red-500 active:scale-95 text-white text-sm font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {mode === "login" ? "Sign In" : "Create Account"}
+            {loading ? "Please wait…" : mode === "login" ? "Sign In" : "Create Account"}
           </button>
-
-          {/* Success */}
-          {success && (
-            <div className="mt-4 py-2.5 px-4 bg-emerald-950 border border-emerald-800 rounded-xl text-emerald-400 text-sm text-center">
-              {success}
-            </div>
-          )}
 
           {/* Footer links */}
           {mode === "login" && (

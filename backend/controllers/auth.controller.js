@@ -108,34 +108,58 @@ exports.forgotPassword = (req, res) => {
   );
 };
 // POST /api/auth/reset-password
-export const resetPassword = async (req, res) => {
-  try {
-    const { email, otp, password } = req.body;
+exports.resetPassword = async (req, res) => {
 
-    const user = await User.findOne({ where: { email } });
-    if (!user) return sendError(res, "Invalid request", 400);
+  const { email, otp, password } = req.body;
 
-    const record = await OTP.findOne({
-      where: {
-        userId: user.id,
-        code: otp,
-        used: false,
-        type: "password_reset",
-        expiresAt: { [Op.gt]: new Date() },
-      },
-    });
+  db.query(
+    "SELECT * FROM users WHERE email=?",
+    [email],
+    async (err, users) => {
 
-    if (!record) return sendError(res, "OTP is invalid or expired", 400);
+      if (users.length === 0) {
+        return res.status(400).json({
+          message: "Invalid request"
+        });
+      }
 
-    const hashed = await bcrypt.hash(password, 12);
-    await user.update({ password: hashed });
-    await record.update({ used: true });
+      const user = users[0];
 
-    return sendSuccess(res, {}, "Password reset successful");
-  } catch (err) {
-    console.error(err);
-    return sendError(res, "Reset failed", 500);
-  }
+      db.query(
+        `SELECT * FROM otp_codes
+         WHERE user_id=? AND code=? AND used=false AND expires_at > NOW()`,
+        [user.id, otp],
+        async (err, results) => {
+
+          if (results.length === 0) {
+            return res.status(400).json({
+              message: "OTP invalid or expired"
+            });
+          }
+
+          const bcrypt = require("bcrypt");
+
+          const hashed = await bcrypt.hash(password, 10);
+
+          db.query(
+            "UPDATE users SET password=? WHERE id=?",
+            [hashed, user.id]
+          );
+
+          db.query(
+            "UPDATE otp_codes SET used=true WHERE id=?",
+            [results[0].id]
+          );
+
+          res.json({
+            message: "Password reset successful"
+          });
+
+        }
+      );
+
+    }
+  );
 };
 
 // GET /api/auth/me

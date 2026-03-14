@@ -27,6 +27,8 @@
 
 The system is modeled on real-world warehouse workflows (inspired by Odoo's inventory module) and built with a focus on reliability, clarity, and developer experience.
 
+
+
 ---
 
 ## ✨ Features
@@ -464,4 +466,3 @@ This project was built for a hackathon and is currently unlicensed. Feel free to
 
 ---
 
-> Made with ☕ and deadline pressure.

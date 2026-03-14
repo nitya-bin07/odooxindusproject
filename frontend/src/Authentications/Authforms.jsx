@@ -144,7 +144,8 @@ export default function AuthForms({ initialMode = "login" }) {
           {/* Footer links */}
           {mode === "login" && (
             <div className="flex justify-center gap-5 mt-4">
-              <button className="text-xs text-gray-600 hover:text-red-400 transition-colors">
+              <button onClick={() => navigate("/forgot-password")}
+  className="text-xs text-gray-600 hover:text-red-400 transition-colors">
                 Forgot Password?
               </button>
               <span className="text-gray-700 text-xs">|</span>

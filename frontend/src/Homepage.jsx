@@ -11,7 +11,7 @@ import {
 
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-
+import logo from "../assets/";
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0, transition: { duration: 0.8 } }

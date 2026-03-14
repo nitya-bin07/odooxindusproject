@@ -11,7 +11,8 @@ import {
 
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/frontend/src/assets/WhatsApp_Image_2026-03-14_at_3.59.44_PM-removebg-preview.png";
+import logo from "./assets/logo.png";
+import dashboardImg from "./assets/dashboard.png";
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0, transition: { duration: 0.8 } }
@@ -35,14 +36,14 @@ const navigate = useNavigate();
     <div className="min-h-screen text-gray-200 bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#1e293b]">
 
       {/* NAVBAR */}
-      <nav className="fixed w-full bg-[#020617]/80 backdrop-blur-md border-b border-slate-800 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <nav className="fixed w-full bg-[#020617]/80 backdrop-blur-md border-b border-slate-800 z-50 ">
+        <div className="max-w-7xl mx-auto px-6 py-1 flex justify-between items-center ">
 
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 flex items-center justify-center">
-  <img src={logo} alt="logo" className="w-8 h-8 object-contain" />
+            <div className=" flex items-center justify-center">
+  <img src={logo} alt="logo" className="w-16 h-16 object-contain" />
 </div>
-            <span className="font-bold text-xl text-white">InvHub</span>
+            <span className="font-bold text-xl text-white">StockPulse</span>
           </div>
 
           <div className="hidden md:flex items-center gap-8">
@@ -70,7 +71,7 @@ const navigate = useNavigate();
       {/* HERO */}
      <section
       id="hero"
-      className="w-full py-24 px-6 bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#1e293b]"
+      className="w-full py-28 px-6 bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#1e293b]"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
@@ -308,7 +309,13 @@ const navigate = useNavigate();
 
   <div className="max-w-7xl mx-auto">
 
-    <div className="text-center mb-16">
+    <motion.div 
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={fadeUp}
+      className="text-center mb-16"
+    >
       <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
         Built for Daily Warehouse Operations
       </h2>
@@ -316,7 +323,7 @@ const navigate = useNavigate();
       <p className="text-xl text-gray-400">
         Digitize and streamline all inventory activities in one system
       </p>
-    </div>
+    </motion.div>
 
     <div className="grid md:grid-cols-3 gap-8">
 
@@ -356,8 +363,12 @@ const navigate = useNavigate();
         const Icon = feature.icon;
 
         return (
-          <div
+          <motion.div
             key={idx}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: idx * 0.1 }}
             className="p-8 rounded-xl border border-slate-800 bg-[#020617]/60 hover:bg-[#020617] hover:border-indigo-500/30 transition-all shadow-lg"
           >
 
@@ -371,7 +382,7 @@ const navigate = useNavigate();
               {feature.desc}
             </p>
 
-          </div>
+          </motion.div>
         );
 
       })}
@@ -387,27 +398,44 @@ const navigate = useNavigate();
 
         <div className="max-w-7xl mx-auto text-center">
 
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <motion.h2 
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            className="text-4xl md:text-5xl font-bold text-white mb-4"
+          >
             Live Inventory Dashboard
-          </h2>
+          </motion.h2>
 
-          <p className="text-xl text-gray-400 mb-12">
+          <motion.p 
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={0.2}
+            className="text-xl text-gray-400 mb-12"
+          >
             Real-time snapshot of warehouse operations
-          </p>
+          </motion.p>
 
-          <div className="bg-[#020617]/70 backdrop-blur-md rounded-2xl border border-slate-800 p-16">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="bg-[#020617]/70 backdrop-blur-md rounded-2xl border border-slate-800 p-16"
+          >
 
-            <BarChart3 className="w-16 h-16 text-gray-600 mx-auto mb-6" />
+            <div className="relative w-full rounded-xl overflow-hidden shadow-2xl border border-slate-700">
+              <img
+                src={dashboardImg}
+                alt="Live Inventory Dashboard"
+                className="w-full h-auto object-cover"
+              />
+            </div>
 
-            <h3 className="text-2xl font-bold text-white">
-              Dashboard Preview
-            </h3>
-
-            <p className="text-gray-400 mt-3">
-              Insert your inventory dashboard component here
-            </p>
-
-          </div>
+          </motion.div>
 
         </div>
 
@@ -417,7 +445,13 @@ const navigate = useNavigate();
       <div className="max-w-7xl mx-auto">
 
         {/* Heading */}
-        <div className="text-center mb-16">
+        <motion.div 
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          className="text-center mb-16"
+        >
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Say Goodbye to Manual Inventory
           </h2>
@@ -425,10 +459,16 @@ const navigate = useNavigate();
           <p className="text-lg text-slate-400">
             Compare traditional tracking methods with our Inventory Management System
           </p>
-        </div>
+        </motion.div>
 
         {/* Comparison Table */}
-        <div className="bg-[#020617]/70 backdrop-blur-md border border-slate-700 rounded-2xl overflow-hidden shadow-xl">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="bg-[#020617]/70 backdrop-blur-md border border-slate-700 rounded-2xl overflow-hidden shadow-xl"
+        >
 
           {/* Header */}
           <div className="grid grid-cols-3 border-b border-slate-700 bg-[#020617]">
@@ -469,26 +509,36 @@ const navigate = useNavigate();
             </div>
           ))}
 
-        </div>
+        </motion.div>
 
       </div>
     </section>
 
       {/* CTA */}
-     <section className="py-24 px-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-center">
+     <section className="py-24 px-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-center overflow-hidden">
+        <motion.div
+           initial={{ opacity: 0, scale: 0.9 }}
+           whileInView={{ opacity: 1, scale: 1 }}
+           viewport={{ once: true }}
+           transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Ready to Transform Your Inventory?
+          </h2>
 
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-          Ready to Transform Your Inventory?
-        </h2>
+          <p className="text-lg text-indigo-100 mb-8">
+            Join businesses streamlining their warehouse operations
+          </p>
 
-        <p className="text-lg text-indigo-100 mb-8">
-          Join businesses streamlining their warehouse operations
-        </p>
-
-        <button onClick={() => navigate("/login")} className="bg-white text-indigo-600 px-10 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition shadow-lg">
-          Get Started
-        </button>
-
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate("/login")} 
+            className="bg-white text-indigo-600 px-10 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition shadow-lg"
+          >
+            Get Started
+          </motion.button>
+        </motion.div>
       </section>
 
     <footer className="bg-[#020617] border-t border-slate-800 py-16 px-6">

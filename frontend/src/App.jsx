@@ -13,7 +13,6 @@ import Products from "./pages/Products";
 import Warehouses from "./pages/Warehouses";
 import Categories from "./pages/Categories";
 import Profile from "./pages/Profile";
-import Settings from "./pages/Settings";
 import ForgotPassword from "./pages/forgotPassword";
 
 export default function App() {
@@ -42,7 +41,6 @@ export default function App() {
             <Route path="warehouses" element={<Warehouses />} />
             <Route path="categories" element={<Categories />} />
             <Route path="profile" element={<Profile />} />
-            <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>
       </BrowserRouter>

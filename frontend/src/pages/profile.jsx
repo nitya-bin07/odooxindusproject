@@ -78,10 +78,8 @@ export default function Profile() {
 
           {/* AVATAR */}
 
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-3xl font-bold shadow">
-
-            {user?.name?.charAt(0)?.toUpperCase() || "U"}
-
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow">
+            <User size={40} strokeWidth={2.5} />
           </div>
 
           {/* USER INFO */}
@@ -97,13 +95,6 @@ export default function Profile() {
               <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                 <Mail size={16} />
                 {user?.email}
-              </div>
-
-              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                <Shield size={16} />
-                <span className="capitalize">
-                  {user?.role?.replace("_", " ")}
-                </span>
               </div>
 
             </div>

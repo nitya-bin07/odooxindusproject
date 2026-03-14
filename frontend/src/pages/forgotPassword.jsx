@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import api from "../api";
+import { useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
 
 export default function ForgotPassword() {
 
@@ -48,6 +51,9 @@ export default function ForgotPassword() {
       });
 
       toast.success(res.data.message || "Password reset successful");
+      setTimeout(() => {
+  navigate("/auth/login");
+}, 1500);
 
     } catch (err) {
 

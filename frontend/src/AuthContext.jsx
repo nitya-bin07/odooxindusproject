@@ -5,13 +5,17 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem("user");
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem("user");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null; 
+    }
   });
   const [token, setToken] = useState(() => localStorage.getItem("token"));
   const [loading, setLoading] = useState(false);
 
-  // Sync to localStorage
+  
   useEffect(() => {
     if (token) localStorage.setItem("token", token);
     else localStorage.removeItem("token");
@@ -53,12 +57,48 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setToken(null);
     setUser(null);
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
   };
 
+  
+
+  const forgotPassword = async (email) => {
+    setLoading(true);
+    try {
+      await api.post("/auth/forgot-password", { email });
+      return { success: true, message: "Reset link sent to your email!" };
+    } catch (err) {
+      return { success: false, message: err.response?.data?.message || "Something went wrong" };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetPassword = async (resetToken, newPassword) => {
+    setLoading(true);
+    try {
+      
+      await api.post(`/auth/reset-password/${resetToken}`, { password: newPassword });
+      return { success: true, message: "Password updated successfully!" };
+    } catch (err) {
+      return { success: false, message: err.response?.data?.message || "Reset failed" };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      token, 
+      loading, 
+      login, 
+      signup, 
+      logout, 
+      forgotPassword, 
+      resetPassword 
+    }}>
       {children}
     </AuthContext.Provider>
   );

@@ -22,6 +22,10 @@ api.interceptors.response.use(
       localStorage.removeItem("user");
       window.location.href = "/login";
     }
+    // Format validation errors nicely
+    if (err.response?.data?.errors?.length) {
+      err.response.data.message = err.response.data.errors.join(", ");
+    }
     return Promise.reject(err);
   }
 );

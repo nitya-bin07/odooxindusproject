@@ -1,4 +1,4 @@
-import sequelize from "../config/database.js";
+import sequelize from "../db/database.js";
 
 // ── Import models ────────────────────────────────────────────────────────────
 import defineUser         from "./user.model.js";

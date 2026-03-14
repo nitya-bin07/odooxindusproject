@@ -34,7 +34,7 @@ export default function DashboardLayout() {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/");
   };
 
   useEffect(() => {

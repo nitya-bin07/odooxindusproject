@@ -66,100 +66,77 @@ export const login = async (req, res) => {
 // POST /api/auth/forgot-password
 // Generates OTP and returns it in the response body.
 // In production, you would email this OTP instead.
-exports.forgotPassword = (req, res) => {
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
 
-  const { email } = req.body;
+    const user = await User.findOne({ where: { email } });
 
-  db.query(
-    "SELECT * FROM users WHERE email=?",
-    [email],
-    (err, results) => {
-
-      if (err) return res.status(500).json(err);
-
-      if (results.length === 0) {
-        return res.json({
-          message: "If that email exists, an OTP has been sent."
-        });
-      }
-
-      const user = results[0];
-
-      const otp = Math.floor(100000 + Math.random() * 900000);
-
-      const expiry = new Date(Date.now() + 10 * 60 * 1000);
-
-      db.query(
-        "INSERT INTO otp_codes (user_id, code, type, expires_at) VALUES (?,?,?,?)",
-        [user.id, otp, "password_reset", expiry],
-        (err) => {
-
-          if (err) return res.status(500).json(err);
-
-          res.json({
-            message: "OTP generated",
-            otp
-          });
-
-        }
-      );
-
+    // avoid email enumeration
+    if (!user) {
+      return sendSuccess(res, {}, "If that email exists, an OTP has been sent.");
     }
-  );
+
+    // invalidate old OTPs
+    await OTP.update(
+      { used: true },
+      { where: { userId: user.id, used: false, type: "password_reset" } }
+    );
+
+    const code = generateOTP();
+    const expiresAt = otpExpiry();
+
+    await OTP.create({
+      userId: user.id,
+      code,
+      type: "password_reset",
+      expiresAt,
+    });
+
+    return sendSuccess(
+      res,
+      { otp: code },
+      "OTP generated. In production this would be sent via email."
+    );
+
+  } catch (err) {
+    console.error(err);
+    return sendError(res, "Could not process request", 500);
+  }
 };
 // POST /api/auth/reset-password
-exports.resetPassword = async (req, res) => {
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, password } = req.body;
 
-  const { email, otp, password } = req.body;
+    const user = await User.findOne({ where: { email } });
 
-  db.query(
-    "SELECT * FROM users WHERE email=?",
-    [email],
-    async (err, users) => {
+    if (!user) return sendError(res, "Invalid request", 400);
 
-      if (users.length === 0) {
-        return res.status(400).json({
-          message: "Invalid request"
-        });
-      }
+    const record = await OTP.findOne({
+      where: {
+        userId: user.id,
+        code: otp,
+        used: false,
+        type: "password_reset",
+        expiresAt: { [Op.gt]: new Date() },
+      },
+    });
 
-      const user = users[0];
+    if (!record) return sendError(res, "OTP is invalid or expired", 400);
 
-      db.query(
-        `SELECT * FROM otp_codes
-         WHERE user_id=? AND code=? AND used=false AND expires_at > NOW()`,
-        [user.id, otp],
-        async (err, results) => {
+    const hashed = await bcrypt.hash(password, 12);
 
-          if (results.length === 0) {
-            return res.status(400).json({
-              message: "OTP invalid or expired"
-            });
-          }
+    await user.update({ password: hashed });
 
-          const bcrypt = require("bcrypt");
+    await record.update({ used: true });
 
-          const hashed = await bcrypt.hash(password, 10);
+    return sendSuccess(res, {}, "Password reset successful");
 
-          db.query(
-            "UPDATE users SET password=? WHERE id=?",
-            [hashed, user.id]
-          );
-
-          db.query(
-            "UPDATE otp_codes SET used=true WHERE id=?",
-            [results[0].id]
-          );
-
-          res.json({
-            message: "Password reset successful"
-          });
-
-        }
-      );
-
-    }
-  );
+  } catch (err) {
+    console.error(err);
+    return sendError(res, "Reset failed", 500);
+  }
 };
 
 // GET /api/auth/me

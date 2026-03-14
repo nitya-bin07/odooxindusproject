@@ -1,45 +1,61 @@
 import { useState } from "react";
-import { useAuth } from "./AuthContext"; // Adjust path as needed
+import { toast } from "react-toastify";
+import api from "../api";
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState({ type: "", text: "" });
-  const { forgotPassword, loading } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const result = await forgotPassword(email);
-    setMessage({ 
-      type: result.success ? "success" : "error", 
-      text: result.message 
-    });
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = async () => {
+
+    if (!email) {
+      toast.error("Please enter your email");
+      return;
+    }
+
+    try {
+
+      const res = await api.post("/auth/forgot-password", {
+        email
+      });
+
+      toast.success(res.data.message || "Reset link sent to email");
+
+    } catch (err) {
+
+      toast.error(
+        err.response?.data?.message || "Something went wrong"
+      );
+
+    }
   };
 
   return (
-    <div className="forgot-password-container">
-      <h2>Forgot Password?</h2>
-      <p>Enter your email address and we'll send you a link to reset your password.</p>
-      
-      {message.text && (
-        <div className={`alert ${message.type}`}>{message.text}</div>
-      )}
+    <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center">
 
-      <form onSubmit={handleSubmit}>
+      <div className="bg-[#111] border border-gray-800 rounded-xl p-6 w-full max-w-sm">
+
+        <h2 className="text-xl text-white font-semibold mb-4">
+          Forgot Password
+        </h2>
+
         <input
           type="email"
           placeholder="Enter your email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+          onChange={(e)=>setEmail(e.target.value)}
+          className="w-full bg-gray-900 text-white px-4 py-3 rounded-lg border border-gray-800 mb-4"
         />
-        <button type="submit" disabled={loading}>
-          {loading ? "Sending..." : "Send Reset Link"}
+
+        <button
+          onClick={handleSubmit}
+          className="w-full bg-red-600 hover:bg-red-500 text-white py-3 rounded-lg"
+        >
+          Send Reset Link
         </button>
-      </form>
-      
-      <div className="footer">
-        <a href="/login">Back to Login</a>
+
       </div>
+
     </div>
   );
 }

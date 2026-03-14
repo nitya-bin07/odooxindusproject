@@ -11,7 +11,7 @@ import {
 
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/";
+import logo from "../assets/frontend/src/assets/WhatsApp_Image_2026-03-14_at_3.59.44_PM-removebg-preview.png";
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0, transition: { duration: 0.8 } }
@@ -39,9 +39,9 @@ const navigate = useNavigate();
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <Box className="w-5 h-5 text-white" />
-            </div>
+            <div className="w-8 h-8 flex items-center justify-center">
+  <img src={logo} alt="logo" className="w-8 h-8 object-contain" />
+</div>
             <span className="font-bold text-xl text-white">InvHub</span>
           </div>
 

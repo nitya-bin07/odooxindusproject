@@ -66,39 +66,47 @@ export const login = async (req, res) => {
 // POST /api/auth/forgot-password
 // Generates OTP and returns it in the response body.
 // In production, you would email this OTP instead.
-export const forgotPassword = async (req, res) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ where: { email } });
+exports.forgotPassword = (req, res) => {
 
-    // Always return 200 to avoid user enumeration
-    if (!user) {
-      return sendSuccess(res, {}, "If that email exists, an OTP has been sent.");
+  const { email } = req.body;
+
+  db.query(
+    "SELECT * FROM users WHERE email=?",
+    [email],
+    (err, results) => {
+
+      if (err) return res.status(500).json(err);
+
+      if (results.length === 0) {
+        return res.json({
+          message: "If that email exists, an OTP has been sent."
+        });
+      }
+
+      const user = results[0];
+
+      const otp = Math.floor(100000 + Math.random() * 900000);
+
+      const expiry = new Date(Date.now() + 10 * 60 * 1000);
+
+      db.query(
+        "INSERT INTO otp_codes (user_id, code, type, expires_at) VALUES (?,?,?,?)",
+        [user.id, otp, "password_reset", expiry],
+        (err) => {
+
+          if (err) return res.status(500).json(err);
+
+          res.json({
+            message: "OTP generated",
+            otp
+          });
+
+        }
+      );
+
     }
-
-    // Invalidate old OTPs
-    await OTP.update(
-      { used: true },
-      { where: { userId: user.id, used: false, type: "password_reset" } }
-    );
-
-    const code = generateOTP();
-    const expiresAt = otpExpiry();
-
-    await OTP.create({ userId: user.id, code, type: "password_reset", expiresAt });
-
-    // In production: send `code` via email/SMS instead of returning it here.
-    return sendSuccess(
-      res,
-      { otp: code, expiresAt },
-      "OTP generated. In production this would be sent via email."
-    );
-  } catch (err) {
-    console.error(err);
-    return sendError(res, "Could not process request", 500);
-  }
+  );
 };
-
 // POST /api/auth/reset-password
 export const resetPassword = async (req, res) => {
   try {

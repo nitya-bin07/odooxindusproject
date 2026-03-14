@@ -14,6 +14,7 @@ import Warehouses from "./pages/Warehouses";
 import Categories from "./pages/Categories";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import forgotPassword from "./pages/forgotPassword";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<AuthForms initialMode="login" />} />
           <Route path="/signup" element={<AuthForms initialMode="signup" />} />
+          <Route path="/forgot-password" element={<forgotPassword/>} />
           <Route
             path="/dashboard"
             element={

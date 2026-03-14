@@ -4,7 +4,8 @@ CREATE TABLE users (
     email VARCHAR(120) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role ENUM('manager','staff') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    login_id VARCHAR(50) UNIQUE
 );
 
 CREATE TABLE categories (

@@ -1,36 +1,24 @@
 const express = require("express");
-const mysql = require("mysql2");
 const cors = require("cors");
 require("dotenv").config();
+
+const db = require("./config/db"); // import database
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
-
-db.connect((err) => {
-    if (err) {
-        console.error("Database connection failed:", err);
-        return;
-    }
-    console.log("MySQL Connected");
-});
-
+// routes
+app.use("/auth", authRoutes);
 
 app.get("/", (req, res) => {
-    res.send("Inventory API running");
+  res.send("Inventory API running");
 });
-
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

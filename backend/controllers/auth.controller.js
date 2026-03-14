@@ -4,6 +4,7 @@ import { signToken } from "../utils/jwt.js";
 import { generateOTP, otpExpiry } from "../utils/otp.js";
 import { sendSuccess, sendError } from "../utils/response.js";
 import { Op } from "sequelize";
+import { sendOTPEmail } from "../utils/mailer.js";
 
 // POST /api/auth/register
 export const register = async (req, res) => {
@@ -92,13 +93,13 @@ export const forgotPassword = async (req, res) => {
       type: "password_reset",
       expiresAt,
     });
-
+    await sendOTPEmail(user.email, code);
     return sendSuccess(
       res,
       { otp: code },
       "OTP generated. In production this would be sent via email."
     );
-
+    
   } catch (err) {
     console.error(err);
     return sendError(res, "Could not process request", 500);

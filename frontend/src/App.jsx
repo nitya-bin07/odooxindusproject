@@ -13,7 +13,7 @@ import Products from "./pages/Products.jsx";
 import Warehouses from "./pages/Warehouses.jsx";
 import Categories from "./pages/Categories.jsx";
 import Profile from "./pages/Profile.jsx";
-import ForgotPassword from "./pages/ForgotPassword";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
 
 export default function App() {
   return (

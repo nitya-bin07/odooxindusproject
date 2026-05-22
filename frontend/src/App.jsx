@@ -9,7 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Overview from "./pages/Overview";
 import MoveHistory from "./pages/MoveHistory";
 import Operations from "./pages/Operations";
-import Products from "./pages/Products";
+import Products from "./pages/products";
 import Warehouses from "./pages/Warehouses";
 import Categories from "./pages/Categories";
 import Profile from "./pages/profile";

@@ -9,11 +9,11 @@ import Dashboard from "./pages/Dashboard";
 import Overview from "./pages/Overview";
 import MoveHistory from "./pages/MoveHistory";
 import Operations from "./pages/Operations";
-import Products from "./pages/products";
+import Products from "./pages/Products";
 import Warehouses from "./pages/Warehouses";
 import Categories from "./pages/Categories";
-import Profile from "./pages/profile";
-import ForgotPassword from "./pages/forgotPassword";
+import Profile from "./pages/Profile";
+import ForgotPassword from "./pages/ForgotPassword";
 
 export default function App() {
   return (

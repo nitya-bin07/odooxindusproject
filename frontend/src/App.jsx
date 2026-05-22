@@ -12,7 +12,7 @@ import Operations from "./pages/Operations";
 import Products from "./pages/Products";
 import Warehouses from "./pages/Warehouses";
 import Categories from "./pages/Categories";
-import Profile from "./pages/Profile";
+import Profile from "./pages/profile";
 import ForgotPassword from "./pages/forgotPassword";
 
 export default function App() {

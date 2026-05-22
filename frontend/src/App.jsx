@@ -5,14 +5,14 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Homepage from "./Homepage";
 import AuthForms from "./Authentications/Authforms";
-import Dashboard from "./pages/Dashboard";
-import Overview from "./pages/Overview";
-import MoveHistory from "./pages/MoveHistory";
-import Operations from "./pages/Operations";
-import Products from "./pages/Products";
-import Warehouses from "./pages/Warehouses";
-import Categories from "./pages/Categories";
-import Profile from "./pages/Profile";
+import Dashboard from "./pages/Dashboard.jsx";
+import Overview from "./pages/Overview.jsx";
+import MoveHistory from "./pages/MoveHistory.jsx";
+import Operations from "./pages/Operations.jsx";
+import Products from "./pages/Products.jsx";
+import Warehouses from "./pages/Warehouses.jsx";
+import Categories from "./pages/Categories.jsx";
+import Profile from "./pages/Profile.jsx";
 import ForgotPassword from "./pages/ForgotPassword";
 
 export default function App() {
